@@ -4,8 +4,7 @@ namespace Controllers;
 use core\classes\BaseController;
 use Models\User;
 
-class Users extends BaseController {
-    public $private = true;
+class UsersController extends BaseController {
     private $model;
     protected $model_name = 'User';
     
@@ -15,5 +14,3 @@ class Users extends BaseController {
     }
 
 }
-
-?>

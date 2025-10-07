@@ -3,13 +3,10 @@
 namespace Controllers;
 use core\classes\BaseController;
 
-class Dashboard extends BaseController {
-    public $private = true;
+class DashboardController extends BaseController {
 
     public function index($params) {
         charge_layout('general', ['dashboard/index'], ['title' => 'Dashboard']);
     }
 
 }
-
-?>

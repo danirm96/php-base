@@ -1,8 +1,7 @@
 <?php
 namespace Controllers;
 
-class Auth {
-    public $private = false;
+class AuthController {
 
     public function login() {
         $auth = new \Auth\AuthUser();

@@ -7,7 +7,7 @@ function charge_partial($partial, $data = []) {
     if (file_exists($partial_file)) {
         require_once $partial_file;
     } else {
-        error_404();
+        error_404(16);
     }
 }
 
@@ -17,7 +17,7 @@ function charge_view($view, $data = []) {
     if (file_exists($view)) {
         require_once $view;
     } else {
-        error_404();
+        error_404(17);
     }
 }
 
@@ -44,7 +44,7 @@ function charge_layout($layout, $views = [], $data = []) {
     $views = $final_views;
 
     if (!$found) {
-        error_404();
+        error_404(18);
     }
 
     if(empty($data) || !isset($data['title']) || $data['title'] == '') {
@@ -54,6 +54,6 @@ function charge_layout($layout, $views = [], $data = []) {
     if (file_exists($layout_file)) {
         require_once $layout_file;
     } else {
-        error_404();
+        error_404(19);
     }
 }

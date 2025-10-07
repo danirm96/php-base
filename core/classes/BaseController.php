@@ -49,7 +49,7 @@ abstract class BaseController {
                 'actions' => $this->model->actions ?? [],
                 'templates' => true,
                 'label' => $this->model->label,
-                'plural' => $this->model->plural ?? $this->model->label . 's',
+                'plural' => $this->model->plural ?? $this->model->label ,
                 'search' => $search
             ]
         );
@@ -58,13 +58,13 @@ abstract class BaseController {
     public function view($params) {
         $id = $params[0] ?? null;
         if (!$id) {
-            error_404();
+            error_404(10);
             exit();
         }
 
         $data = $this->model->find([$this->model->primaryKey => $id]);
         if (empty($data['rows'])) {
-            error_404();
+            error_404(11);
             exit();
         }
         $item = $data['rows'][0];
@@ -76,7 +76,7 @@ abstract class BaseController {
                 'title' => 'View ' . $this->model->label,
                 'data' => $item,
                 'label' => $this->model->label,
-                'plural' => $this->model->plural ?? $this->model->label . 's',
+                'plural' => $this->model->plural ?? $this->model->label,
                 'templates' => true,
                 'type' => 'view',
                 'model' => $this->model
@@ -87,13 +87,13 @@ abstract class BaseController {
     public function edit($params) {
         $id = $params[0] ?? null;
         if (!$id) {
-            error_404();
+            error_404(12);
             exit();
         }
 
         $data = $this->model->find([$this->model->primaryKey => $id]);
         if (empty($data['rows'])) {
-            error_404();
+            error_404(13);
             exit();
         }
         $item = $data['rows'][0];
@@ -106,7 +106,7 @@ abstract class BaseController {
                 'title' => 'Edit ' . $this->model->label,
                 'data' => $item,
                 'label' => $this->model->label,
-                'plural' => $this->model->plural ?? $this->model->label . 's',
+                'plural' => $this->model->plural ?? $this->model->label,
                 'templates' => true,
                 'type' => 'edit',
                 'model' => $this->model
@@ -118,13 +118,13 @@ abstract class BaseController {
 
         $id = isset($params[0]) ? $params[0] : ($_POST[$this->model->primaryKey] ?? null);
         if (!$id) {
-            error_404();
+            error_404(14);
             exit();
         }
 
         $data = $this->model->findBy($this->model->primaryKey, $id);
         if (empty($data)) {
-            error_404();
+            error_404(15);
             exit();
         }
 
@@ -155,7 +155,7 @@ abstract class BaseController {
                 'title' => 'Edit ' . $this->model->label,
                 'data' => $item,
                 'label' => $this->model->label,
-                'plural' => $this->model->plural ?? $this->model->label . 's',
+                'plural' => $this->model->plural ?? $this->model->label,
                 'templates' => true,
                 'type' => 'edit',
                 'model' => $this->model
@@ -172,7 +172,7 @@ abstract class BaseController {
                 'title' => 'Create ' . $this->model->label,
                 'data' => [],
                 'label' => $this->model->label,
-                'plural' => $this->model->plural ?? $this->model->label . 's',
+                'plural' => $this->model->plural ?? $this->model->label,
                 'templates' => true,
                 'type' => 'create',
                 'model' => $this->model
@@ -227,7 +227,7 @@ abstract class BaseController {
                         'title' => 'Create ' . $this->model->label,
                         'data' => $_POST,
                         'label' => $this->model->label,
-                        'plural' => $this->model->plural ?? $this->model->label . 's',
+                        'plural' => $this->model->plural ?? $this->model->label,
                         'templates' => true,
                         'type' => 'create',
                         'model' => $this->model,
@@ -245,7 +245,7 @@ abstract class BaseController {
                         'title' => 'Create ' . $this->model->label,
                         'data' => [],
                         'label' => $this->model->label,
-                        'plural' => $this->model->plural ?? $this->model->label . 's',
+                        'plural' => $this->model->plural ?? $this->model->label,
                         'templates' => true,
                         'type' => 'create',
                         'model' => $this->model,
@@ -262,7 +262,7 @@ abstract class BaseController {
                 'title' => 'Create ' . $this->model->label,
                 'data' => [],
                 'label' => $this->model->label,
-                'plural' => $this->model->plural ?? $this->model->label . 's',
+                'plural' => $this->model->plural ?? $this->model->label,
                 'templates' => true,
                 'type' => 'create',
                 'model' => $this->model

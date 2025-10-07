@@ -34,5 +34,10 @@ $menu = [
         'url' => '/users/list',
         'icon' => 'person-outline', 
         'private' => true
-    ]
+    ],
+    'Projectos' => [
+        'url' => '/projects/list',
+        'icon' => 'briefcase-outline', 
+        'private' => true
+    ],
 ];

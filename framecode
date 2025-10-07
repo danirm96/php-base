@@ -1,9 +1,41 @@
 
 <?php
+require_once 'core/generations/generate.php';
 
-# $routes->get('users/list', 'users::list', 'authUser.admin', false);
-# $routes->get('users/view/:id', 'users::view', 'authUser.admin.user', false);
-# $routes->get('users/edit/:id', 'users::edit', 'authUser.admin', false);
-# $routes->post('users/update', 'users::update', 'authUser.admin', false);
-# $routes->post('users/create', 'users::create', 'authUser.admin', false);
-# $routes->get('users/new', 'users::new', 'authUser.admin', false);
+
+if (php_sapi_name() === 'cli') {
+    $type = $argv[1] ?? null;
+    $generateName = $argv[2] ?? null;
+    $auth = $argv[3] ?? 'authUser';
+    if (!$generateName) {
+        echo "Usage: php framecode <ModelName>\n";
+        exit(1);
+    }
+
+    charge_type($type, $generateName, $auth);
+    exit(0);
+
+}
+
+function charge_type($type, $name, $auth = 'authUser') {
+    switch ($type) {
+        case 'model':
+            generate_model($name);
+            break;
+        case 'controller':
+            generateController($name);
+            break;
+        case 'resource':
+            generateModel($name);
+            generateController($name);
+            generateRoutes($name, $auth);
+            break;
+        default:
+            echo "Tipo no soportado: $type\n";
+            exit(1);
+    }
+}
+
+function generate_model($name) {
+    generateModel($name);
+}

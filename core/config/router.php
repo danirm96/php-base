@@ -32,7 +32,7 @@ if ($route) {
     );
 
 } else {
-    error_404();
+    error_404(20);
     exit();
 }
 
@@ -64,6 +64,7 @@ if (file_exists($controller_file)) {
 
             unset($params_auth[0]);
             $auth_instance = new $auth_class();
+            
             if(!$auth_instance->canAccess($params_auth)) {
                 header('Location: ' . BASE_URL );
                 exit();
