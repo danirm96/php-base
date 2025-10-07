@@ -1,11 +1,11 @@
 <?php
 
-namespace Controllers;
-use Config\Db;
-use Config\Controller;
+namespace core\classes;
+use core\classes\BaseController;
+use core\classes\Db;
 use PDO;
 
-class Migrations extends Controller {
+class Migrations extends BaseController {
 
     public $private = true;
 
@@ -17,7 +17,7 @@ class Migrations extends Controller {
     public function index() {        
         $models = array_diff(scandir('models'), array('.', '..'));
         foreach ($models as $model) {
-            $model_name = str_replace('.php', '', $model);
+            $model_name = "Models\\" . str_replace('.php', '', $model);
             if (class_exists($model_name)) {
                 $instance = new $model_name();
                 if (method_exists($instance, 'columns')) {
@@ -31,17 +31,19 @@ class Migrations extends Controller {
                         $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
                         if (empty($tables)) {
-                            // Construir columnas principales
-                            $columns_sql = ["id INT(11) AUTO_INCREMENT PRIMARY KEY"];
-                            // Agregar columnas del modelo
+                            $columns_sql = ["id INT NOT NULL AUTO_INCREMENT PRIMARY KEY"];
+
                             foreach ($columns as $column_name => $attributes) {
+                                if($column_name === 'id') continue;
                                 $type = strtoupper($attributes['type']);
                                 $max_length = isset($attributes['max_length']) ? "({$attributes['max_length']})" : '';
                                 $required = isset($attributes['required']) && $attributes['required'] ? 'NOT NULL' : 'NULL';
                                 $default = isset($attributes['default']) ? "DEFAULT '{$attributes['default']}'" : '';
                                 $columns_sql[] = "$column_name $type$max_length $required $default";
+
                             }
-                            // Agregar timestamps al final
+
+
                             if ($instance->timestamps) {
                                 $columns_sql[] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
                                 $columns_sql[] = "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
@@ -49,6 +51,7 @@ class Migrations extends Controller {
                                 $columns_sql[] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
                             }
                             $sql = "CREATE TABLE $table (" . implode(', ', $columns_sql) . ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                            echo "Creada tabla: " . $table . "<br>";
                             $conn->exec($sql);
                         }
 
@@ -61,18 +64,21 @@ class Migrations extends Controller {
                                 $max_length = isset($attributes['max_length']) ? "({$attributes['max_length']})" : '';
                                 $required = isset($attributes['required']) && $attributes['required'] ? 'NOT NULL' : 'NULL';
                                 $default = isset($attributes['default']) ? "DEFAULT '{$attributes['default']}'" : '';
-                                // Añadir la columna antes de los timestamps si existen, sino al final
+
                                 $after = $instance->timestamps ? " AFTER id" : "";
                                 $sql = "ALTER TABLE $table ADD COLUMN $column_name $type$max_length $required $default$after";
                                 $conn->exec($sql);
+                                echo "Añadida columna: $column_name en tabla: $table<br>";
                             }
                         }
+                        echo "Migrado: " . $model_name . "<br>";
+
                     }
                 } else {
-                    echo "No columns method in: " . $model_name . "<br>";
+                    echo "No está el método de columnas definido en: " . $model_name . "<br>";
                 }
             } else {
-                echo "Class does not exist: " . $model_name . "<br>";
+                echo "La clase no existe: " . $model_name . "<br>";
             }
         }
     }
@@ -89,7 +95,8 @@ class Migrations extends Controller {
         $imports = '';
         foreach ($seeders as $seeder) {
             require_once 'seeders/' . ucfirst($seeder);
-            $model_name = str_replace('.php', '', ucfirst($seeder));
+            
+            $model_name = "Models\\" . str_replace('.php', '', ucfirst($seeder));
 
             if (class_exists($model_name)) {
                 $instance = new $model_name();
@@ -99,10 +106,10 @@ class Migrations extends Controller {
                     }
                     $imports .= "Seeded: " . $model_name . "<br>";
                 } else {
-                    echo "No create method in: " . $model_name . "<br>";
+                    echo "No existe el método create: " . $model_name . "<br>";
                 }
             } else {
-                echo "Class does not exist: " . $model_name . "<br>";
+                echo "La clase no existe: " . $model_name . "<br>";
             }
         }
 
@@ -110,6 +117,7 @@ class Migrations extends Controller {
     }
 
     public function all($fresh) {
+
         if($fresh === 'fresh') {
             $db = new Db();
             $conn = $db->getConnection();

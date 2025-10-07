@@ -1,8 +1,8 @@
 <?php
+namespace Models;
+use core\classes\BaseModel;
 
-use Config\Model;
-
-class Role extends Model {
+class Role extends BaseModel {
 
     private $name;
     private $description;
@@ -21,7 +21,15 @@ class Role extends Model {
     }
 
     public function columns() {
-        return array('name' => array(
+        return
+        array(
+        'id' => array(
+            'type' => 'int',
+            'required' => true,
+            'show_in_list' => true,
+            'auto_increment' => true
+        ),
+        'name' => array(
             'type' => 'varchar',
             'max_length' => 50,
             'required' => true,
@@ -31,9 +39,14 @@ class Role extends Model {
          'description' => array(
             'type' => 'text',
             'required' => false,
-            'show_in_list' => false
+            'show_in_list' => true
 
         ));
+    }
+
+    public function getRoles($where = '', $order = '', $limit = 10, $page = 1) {
+        $model = new Role();
+        return $model->all($where, $order, $limit, $page);
     }
 
 }

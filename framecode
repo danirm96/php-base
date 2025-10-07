@@ -1,0 +1,9 @@
+
+<?php
+
+# $routes->get('users/list', 'users::list', 'authUser.admin', false);
+# $routes->get('users/view/:id', 'users::view', 'authUser.admin.user', false);
+# $routes->get('users/edit/:id', 'users::edit', 'authUser.admin', false);
+# $routes->post('users/update', 'users::update', 'authUser.admin', false);
+# $routes->post('users/create', 'users::create', 'authUser.admin', false);
+# $routes->get('users/new', 'users::new', 'authUser.admin', false);

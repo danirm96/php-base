@@ -31,7 +31,7 @@
 </head>
 <body>
     <h1>404</h1>
-    <p>Lo sentimos, la página que buscas no existe. <?php e($msg); ?></p>
+    <p>Lo sentimos, la página que buscas no existe.</p>
     <a href="/">Volver al inicio</a>
 </body>
 </html>

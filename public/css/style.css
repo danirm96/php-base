@@ -1,19 +1,125 @@
+body {
+  background-color: #fafafa;
+}
+
+.tomato {
+  color: tomato;
+}
+
+.bg-tomato {
+  background-color: tomato;
+  color: #fff;
+}
+
+.bg-black {
+  background-color: #000;
+  color: #fff;
+}
+
+pre {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+
 #notices {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
 
-    .notice {
-        padding: 10px 20px;
-        border-radius: 5px;
-        margin-top: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        border-left: 5px solid;
-        font-size: 16px;
+  .notice {
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid;
+    font-size: 16px;
 
-        &.error {
-            border-color: #f8021b;
-        }
+    &.error {
+      border-color: #f8021b;
     }
+  }
+}
+
+a:not(.btn) {
+  text-decoration: none;
+  color: #333;
+  transition: 0.3s;
+
+  &:hover {
+    color: tomato;
+  }
+}
+
+.template-general {
+  header {
+    height: 60px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background-color: #fff;
+    z-index: 1000;
+    border-bottom: 1px solid #e4e4e7;
+  }
+
+  .sidebar {
+    max-width: 250px;
+    .menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 10px;
+
+        a {
+          display: block;
+          padding: 10px 15px;
+          border-radius: 5px;
+          color: #333;
+          font-size: 16px;
+          transition: 0.3s;
+          &:hover {
+            background-color: #f0f0f081;
+            color: tomato;
+          }
+
+          ion-icon {
+            vertical-align: middle;
+            margin-right: 8px;
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+form[type="view"]{
+  input,
+  select {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    color: #333;
+    cursor: default;
+  
+    &:hover {
+      background-color: transparent;
+      color: #333;
+    }
+  }
+  button {
+    display: none;
+  }
 }

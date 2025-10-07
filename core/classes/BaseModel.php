@@ -1,14 +1,19 @@
 <?php
 
-namespace Config;
-use Config\Db;
+namespace core\classes;
 use PDO;
 use PDOException;
 
-class Model {
+abstract class BaseModel {
+    // TODO: Definir métodos y propiedades necesarias para los controladores que extiendan esta clase.
     public $table = '';
     public $primaryKey = 'id';
     public $timestamps = true;
+    public $private = false;
+    public $canCreate = false;
+    public $searchable = [];
+    public $head = [];
+    public $label = '';
 
     public function __construct() {
     }
@@ -82,21 +87,49 @@ class Model {
         }
     }
 
-    public function find($id) {
-        $db = new Db();
-        $conn = $db->getConnection();
+    public function find($where = [], $type = '', $order = '', $limit = 10, $page = 1) {
 
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1";
-
-        try {
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+        $columns = $this->columns();
+        $selectFields = [];
+        foreach ($columns as $colName => $colProps) {
+            if (!empty($colProps['show_in_list'])) {
+            if (isset($colProps['foreign_key'])) {
+                $fk = $colProps['foreign_key'];
+                $selectFields[] = "r.{$fk['display_column']} AS {$colName}";
+            } else {
+                $selectFields[] = "u.{$colName}";
+            }
+            }
         }
+        $select = implode(', ', $selectFields);
+        
+        $whereClause = '';
+        if (!empty($where)) {
+            $conditions = [];
+            foreach ($where as $field => $value) {
+            $conditions[] = "u.{$field} LIKE '{$value}'";
+            }
+            $whereClause = 'WHERE ' . implode(' ' . $type . ' ', $conditions);
+        }
+        
+        $orderClause = '';
+        if (!empty($order)) {
+            $orderClause = "ORDER BY {$order}";
+        }
+        
+        $offset = ($page - 1) * $limit;
+        
+        $countSql = "SELECT COUNT(*) as total FROM {$this->table} u {$whereClause}";
+        $totalQuery = $this->query($countSql);
+        $totalCount = $totalQuery[0]['total'] ?? 0;
+        
+        $sql = "SELECT $select FROM {$this->table} u LEFT JOIN roles r ON u.role_id = r.id {$whereClause} {$orderClause} LIMIT {$limit} OFFSET {$offset}";
+        $rows = $this->query($sql);
+        
+        return [
+            'rows' => $rows,
+            'count' => $totalCount
+        ];
     }
 
     public function findBy($field, $value) {
@@ -159,6 +192,20 @@ class Model {
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function query($sql, $params = [], $count = false) {
+        $db = new Db();
+        $conn = $db->getConnection();
+
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;

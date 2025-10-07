@@ -1,12 +1,22 @@
 <?php
 
-$routes = [
-    'login' => ['controller' => 'auth', 'view' => 'login', 'private' => false, 'method' => 'GET'],
-    'access' => ['controller' => 'auth', 'view' => 'access', 'private' => false, 'method' => 'POST'],
-    'dashboard' => ['controller' => 'dashboard', 'view' => 'index', 'private' => true, 'method' => 'GET'],
-    'projects' =>
-    [
-        'new' => ['controller' => 'projects', 'view' => 'new', 'private' => true, 'method' => 'GET'],
-        'edit' => ['controller' => 'projects', 'view' => 'edit', 'private' => true, 'method' => 'GET'],
-    ]
-];
+// Sintaxis: $routes->get(path, controller::method, authClass, private)
+
+// Ruta de ejemplo con parámetros dinámicos
+// $routes->get('user/list/:id/:name', 'users::list', 'auth.admin', true);
+
+// Accesos
+$routes->get('', 'Auth::login', false, false);
+$routes->get('login', 'Auth::login',false, false);
+$routes->post('access', 'Auth::access',false, false);
+$routes->get('logout', 'Auth::logout', false, true);
+
+// Dashboard
+$routes->get('dashboard', 'dashboard::index', 'authUser.admin.user', false);
+
+$routes->get('users/list', 'users::list', 'authUser.admin', false);
+$routes->get('users/view/:id', 'users::view', 'authUser.admin.user', false);
+$routes->get('users/edit/:id', 'users::edit', 'authUser.admin', false);
+$routes->post('users/update', 'users::update', 'authUser.admin', false);
+$routes->post('users/create', 'users::create', 'authUser.admin', false);
+$routes->get('users/new', 'users::new', 'authUser.admin', false);
